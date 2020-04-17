@@ -4,7 +4,7 @@ ARG RENPY_VERSION="7.3.5"
 ARG RENPY_TARBALL="renpy-$RENPY_VERSION-sdk.tar.bz2"
 
 # Install dependencies
-RUN pacman -Syy && yes | pacman -S git tar unzip wget
+RUN pacman -Syy && yes | pacman -S tar unzip wget
 # Set up path
 RUN mkdir -p /renpy/tmp
 WORKDIR /renpy/tmp
@@ -29,8 +29,3 @@ RUN ./butler upgrade && ./butler -V
 RUN ls -la
 
 ENV PATH="$PATH:/renpy"
-
-# Run Ren'Py tests
-# RUN ./renpy.sh "../ganbatte/" lint
-# Build distribution files
-# RUN ./renpy.sh launcher distribute "../ganbatte/"
