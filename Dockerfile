@@ -3,7 +3,7 @@ FROM archlinux/base:latest
 ARG RENPY_VERSION="7.3.5"
 
 # Install dependencies
-RUN pacman -Syy && yes | pacman -S grep python2 python2-pygame-sdl2 python-pip tar unzip
+RUN pacman -Syy && yes | pacman -S coreutils grep python2 python2-pygame-sdl2 python-pip tar unzip which
 # Set up path
 RUN mkdir -p /renpy/tmp
 WORKDIR /renpy/tmp
@@ -23,5 +23,7 @@ RUN ./butler upgrade && ./butler -V
 # Install Ren'Py
 RUN pip install renutil
 RUN renutil install "$RENPY_VERSION"
+RUN which grep
+RUN which cut
 
 ENV PATH="$PATH:/renpy"
