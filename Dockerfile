@@ -10,7 +10,7 @@ WORKDIR /renpy/tmp
 # Download the itch.io butler
 RUN curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default && unzip -j butler.zip
 # Download ghr
-RUN curl -L https://github.com/tcnksm/ghr/releases/download/v0.12.0/ghr_v0.12.0_linux_386.tar.gz | tar -xz --strip-components 1
+RUN curl -L https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_386.tar.gz | tar -xz --strip-components 1
 # Move binaries to ~/renpy
 RUN mv butler /renpy && mv ghr /renpy
 WORKDIR /renpy
