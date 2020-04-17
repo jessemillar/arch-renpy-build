@@ -3,7 +3,7 @@ FROM archlinux/base:latest
 ARG RENPY_VERSION="7.3.5"
 
 # Install dependencies
-RUN pacman -Syy && yes | pacman -S python2 python2-pygame-sdl2 python-pip tar unzip
+RUN pacman -Syy && yes | pacman -S grep python2 python2-pygame-sdl2 python-pip tar unzip
 # Set up path
 RUN mkdir -p /renpy/tmp
 WORKDIR /renpy/tmp
