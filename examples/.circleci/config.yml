@@ -8,27 +8,18 @@ jobs:
       - image: jessemillar/arch-renpy-build:latest
     steps:
       - checkout
-      - run:
-          name: Check directory structure
-          command: ls -la
-      - run:
-          name: Lint with Ren'Py
-          command: ./renpy.sh "../ganbatte/" lint
+      # - run:
+          # name: Lint with Ren'Py
+          # command: renutil launch $(renutil list) lint .
       - run:
           name: Build with Ren'Py
-          command: ./renpy.sh launcher distribute "../ganbatte/"
-      - run:
-          name: Check Files
-          command: ls -la artifacts
+          command: renutil launch $(renutil list) distribute .
       - run:
           name: "Publish Release on GitHub and itch.io"
           command: |
-            VERSION=$(cat conf.lua | grep version | cut -d'"' -f2)
-            ghr -t "${GITHUB_TOKEN}" -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" -c "${CIRCLE_SHA1}" -n "v${VERSION}" -delete "v${VERSION}" ./artifacts/
-            cd artifacts || exit
-            WIN64_FILE=$(ls ./*-win64.zip); butler push "$WIN64_FILE" compycore/waddle-about-walking-tours:win64 --userversion "$VERSION"
-            WIN32_FILE=$(ls ./*-win32.zip); butler push "$WIN32_FILE" compycore/waddle-about-walking-tours:win32 --userversion "$VERSION"
-            MACOS_FILE=$(ls ./*-macos.zip); butler push "$MACOS_FILE" compycore/waddle-about-walking-tours:macos --userversion "$VERSION"
-            # Workaround for issue where butler renames *.love to *.zip
-            LINUX_FILE=$(ls ./*.love); mkdir love-file-dir; mv "$LINUX_FILE" love-file-dir
-            butler push love-file-dir compycore/waddle-about-walking-tours:linux --userversion "$VERSION"
+            VERSION=$(grep config.version < ./game/options.rpy | cut -d'"' -f2)
+            cd "./$CIRCLE_PROJECT_REPONAME-$VERSION-dists" || exit
+            ghr -t "${GITHUB_TOKEN}" -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" -c "${CIRCLE_SHA1}" -n "v${VERSION}" -delete "v${VERSION}" .
+            WIN_FILE=$(ls ./*-win.zip); butler push "$WIN_FILE" "compycore/${CIRCLE_PROJECT_REPONAME}:windows" --userversion "$VERSION"
+            MACOS_FILE=$(ls ./*-mac.zip); butler push "$MACOS_FILE" "compycore/${CIRCLE_PROJECT_REPONAME}:macos" --userversion "$VERSION"
+            LINUX_FILE=$(ls ./*-linux.tar.bz2); butler push "$LINUX_FILE" "compycore/${CIRCLE_PROJECT_REPONAME}:linux" --userversion "$VERSION"
